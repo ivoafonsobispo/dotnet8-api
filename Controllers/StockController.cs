@@ -1,4 +1,6 @@
 ﻿using api.Data;
+using api.DTOs.Stock;
+using api.Mappers;
 using api.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,7 +20,7 @@ public class StockController : ControllerBase
     [HttpGet]
     public IActionResult GetAll()
     {
-        List<Stock> stocks = _context.Stock.ToList();
+        var stocks = _context.Stock.ToList().Select(s => s.ToStockDTO());
 
         return Ok(stocks);
     }
@@ -33,6 +35,6 @@ public class StockController : ControllerBase
             return NotFound();
         }
 
-        return Ok(stock);
+        return Ok(stock.ToStockDTO());
     }
 }
