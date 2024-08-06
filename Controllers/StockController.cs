@@ -8,19 +8,12 @@ namespace api.Controllers;
 
 [Route("api/stock")]
 [ApiController]
-public class StockController : ControllerBase
+public class StockController(ApplicationDbContext context) : ControllerBase
 {
-    private readonly ApplicationDbContext _context;
-    
-    public StockController(ApplicationDbContext context)
-    {
-        _context = context;
-    }
-
     [HttpGet]
     public IActionResult GetAll()
     {
-        var stocks = _context.Stock.ToList().Select(s => s.ToStockDTO());
+        var stocks = context.Stock.ToList().Select(s => s.ToStockDTO());
 
         return Ok(stocks);
     }
@@ -28,7 +21,7 @@ public class StockController : ControllerBase
     [HttpGet("{id}")]
     public IActionResult GetById([FromRoute] int id)
     {
-        Stock? stock = _context.Stock.Find(id);
+        Stock? stock = context.Stock.Find(id);
 
         if (stock == null)
         {
@@ -36,5 +29,14 @@ public class StockController : ControllerBase
         }
 
         return Ok(stock.ToStockDTO());
+    }
+
+    [HttpPost]
+    public IActionResult Create([FromBody] CreateStockRequestDTO stockDto)
+    {
+        var stockModel = stockDto.ToStockFromCreateDTO();
+        context.Add(stockModel);
+        context.SaveChanges();
+        return CreatedAtAction(nameof(GetById), new { id = stockModel.Id }, stockModel.ToStockDTO());
     }
 }
