@@ -3,6 +3,7 @@ using api.DTOs.Stock;
 using api.Interfaces;
 using api.Models;
 using Microsoft.EntityFrameworkCore;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace api.Repository;
 
@@ -10,12 +11,12 @@ public class StockRepository(ApplicationDbContext context) : IStockRepository
 {
     public async Task<List<Stock>> GetAllAsync()
     {
-        return await context.Stock.ToListAsync();
+        return await context.Stock.Include(c => c.Comments).ToListAsync();
     }
 
     public async Task<Stock?> GetByIdAsync(int id)
     {
-        return await context.Stock.FindAsync(id);
+        return await context.Stock.Include(c=> c.Comments).FirstOrDefaultAsync(s => s.Id == id);
     }
 
     public async Task<Stock> CreateAsync(Stock stock)

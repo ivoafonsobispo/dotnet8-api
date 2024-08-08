@@ -17,4 +17,17 @@ public class CommentController(ICommentRepository commentRepository) : Controlle
         var commentsDto = comments.Select(comment => comment.ToCommentDto());
         return Ok(commentsDto);
     }
+
+    [HttpGet]
+    [Route("{id}")]
+    public async Task<IActionResult> GetById([FromRoute] int id)
+    {
+        var comment = await commentRepository.GetByIdAsync(id);
+        if (comment == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(comment.ToCommentDto());
+    }
 }
