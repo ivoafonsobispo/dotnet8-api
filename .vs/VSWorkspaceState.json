@@ -3,8 +3,8 @@
     "",
     "\\Controllers",
     "\\DTOs",
-    "\\DTOs\\Stock"
+    "\\DTOs\\Stock",
+    "\\Interfaces"
   ],
-  "SelectedNode": "\\Controllers\\StockController.cs",
   "PreviewInSolutionExplorer": false
 }
