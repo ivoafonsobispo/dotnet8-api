@@ -16,4 +16,26 @@ public class CommentRepository(ApplicationDbContext context) : ICommentRepositor
     {
         return await context.Comment.FindAsync(id);
     }
+
+    public async Task<Comment> CreateASync(Comment comment)
+    {
+        await context.Comment.AddAsync(comment);
+        await context.SaveChangesAsync();
+        return comment;
+    }
+
+    public async Task<Comment?> UpdateAsync(int id, Comment comment)
+    {
+        var existingComment = await context.Comment.FindAsync(id);
+        if (existingComment == null)
+        {
+            return null;
+        }
+
+        existingComment.Title = comment.Title;
+        existingComment.Content = comment.Content;
+
+        await context.SaveChangesAsync();
+        return existingComment;
+    }
 }
