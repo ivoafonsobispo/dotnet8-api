@@ -58,5 +58,18 @@ public class CommentController(ICommentRepository commentRepository, IStockRepos
 
         return Ok(comment.ToCommentDto());
     }
+
+    [HttpDelete]
+    [Route("{id}")]
+    public async Task<IActionResult> Delete([FromRoute] int id)
+    {
+        var comment = await commentRepository.DeleteAsync(id);
+        if (comment == null)
+        {
+            return NotFound("Comment Not Found");
+        }
+
+        return Ok(comment);
+    }
     
 }

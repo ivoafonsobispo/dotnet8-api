@@ -38,4 +38,18 @@ public class CommentRepository(ApplicationDbContext context) : ICommentRepositor
         await context.SaveChangesAsync();
         return existingComment;
     }
+
+    public async Task<Comment?> DeleteAsync(int id)
+    {
+        var existingComment = await context.Comment.FindAsync(id);
+        if (existingComment == null)
+        {
+            return null;
+        }
+
+        context.Comment.Remove(existingComment);
+        await context.SaveChangesAsync();
+
+        return existingComment;
+    }
 }
